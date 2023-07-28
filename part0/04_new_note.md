@@ -2,7 +2,16 @@ sequenceDiagram
     participant browser
     participant server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+
+    Note right of browser: User types a note into the form field and clicks "Save"
+
+    browser-->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+    Note right of browser: Sends the following to the server:  <br>{ content: "My note", date: new Date() }
+    activate server
+    server-->>browser: Redirects to https://studies.cs.helsinki.fi/exampleapp/notes
+    deactivate server
+        browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
     deactivate server
@@ -25,11 +34,3 @@ sequenceDiagram
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes
-
-    browser-->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-
-    Note right of browser: Sends the following to the server:  <br>{ content: "My note", date: new Date() }
-    activate server
-    server-->>browser: Redirects to / GET https://studies.cs.helsinki.fi/exampleapp/notes
-    deactivate server
-    Note left of server: Repeats the process of getting the HTML, CSS and JS files
