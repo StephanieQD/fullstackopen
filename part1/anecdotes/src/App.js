@@ -11,9 +11,10 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
-  const [selected, setSelected] = useState(0);
+
   const randomAnecdoteIndex = () => Math.floor(Math.random() * (anecdotes.length));
+  const [selected, setSelected] = useState(randomAnecdoteIndex());
+  
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
   const voteSelected = () => {
@@ -22,14 +23,26 @@ const App = () => {
     setVotes(votesDup);
   }
 
+  const mostPopIndex = votes.indexOf(Math.max(...votes));
+
   return (
     <main>
+      <h2>Anecdote of the day</h2>
       <blockquote>
-        <p>{anecdotes[selected]}</p>
+        <p>
+          <b>Anecdote #{selected}</b> ({votes[selected]} vote{votes[selected] === 1 ? '' : 's'}) <br />
+          {anecdotes[selected]}
+        </p>
       </blockquote>
-      <em>has {votes[selected]} votes</em> <br />
       <button onClick={voteSelected}>Vote</button>
       <button onClick={() => setSelected(randomAnecdoteIndex())}>Next anecdote</button>
+      <h2>Anecdote with the most votes</h2>
+      <blockquote>
+        <p>
+          <b>Anecdote #{mostPopIndex}</b> ({votes[mostPopIndex]} vote{votes[mostPopIndex] === 1 ? '' : 's'}) <br />
+          {anecdotes[mostPopIndex]}
+        </p>
+      </blockquote>
     </main>
   )
 }
