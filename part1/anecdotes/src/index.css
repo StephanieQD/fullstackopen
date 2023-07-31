@@ -7,7 +7,38 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+main {
+  width: 90%;
+  max-width: 600px;
+  margin: 50px auto;
+}
+
+blockquote {
+  font-size: 1.4em;
+  font-family: 'Open Sans', 'Segoe UI', sans-serif;
+  font-style:italic;
+  color: #555555;
+  padding:1.2em 30px 1.2em 75px;
+  border-left:8px solid #6C83B9 ;
+  line-height:1.6;
+  position: relative;
+  background:#EDEDED;
+  margin: 1em 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+}
+
+blockquote::before{
+  content: "\201C";
+  color:#6C83B9;
+  font-size:4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+blockquote p {
+  margin: 0;
 }
