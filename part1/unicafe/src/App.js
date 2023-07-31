@@ -4,9 +4,12 @@ const Button = ({handleClick, text}) => (
   <button className={`button ${text}`} onClick={handleClick}>{text}</button>
 )
 
+const StatisticLine = ({text, value}) => {
+  return <div>{text} {value}</div>
+}
+
 const Statistics = ({good, bad, neutral}) => {
   const total = good + neutral + bad;
-
   const calcAvg = () => total !== 0 ? (good + (bad * -1)) / total : 'N/A';
   const calcPos = () => total !== 0 ? (good / total) * 100 : 'N/A';
 
@@ -15,17 +18,16 @@ const Statistics = ({good, bad, neutral}) => {
       <h2>Statistics</h2>
       { total > 0 ? 
         <>
-          good {good} <br />
-          neutral {neutral} <br />
-          bad {bad} <br />
-          all {total} <br />
-          average {calcAvg()}<br />
-          positive {calcPos()}% 
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={calcAvg()} />
+          <StatisticLine text="positive" value={`${calcPos()}%`} />
         </> :
         <h3>No feedback given.</h3>
       }
     </div>
-    
   );
 }
 
