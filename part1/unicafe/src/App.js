@@ -13,12 +13,17 @@ const Statistics = ({good, bad, neutral}) => {
   return (
     <div>
       <h2>Statistics</h2>
-      good {good} <br />
-      neutral {neutral} <br />
-      bad {bad} <br />
-      all {total} <br />
-      average {calcAvg()}<br />
-      positive {calcPos()}%
+      { total > 0 ? 
+        <>
+          good {good} <br />
+          neutral {neutral} <br />
+          bad {bad} <br />
+          all {total} <br />
+          average {calcAvg()}<br />
+          positive {calcPos()}% 
+        </> :
+        <h3>No feedback given.</h3>
+      }
     </div>
     
   );
