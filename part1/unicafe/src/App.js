@@ -14,6 +14,11 @@ const App = () => {
   const incrementNeutral = () => setNeutral(neutral + 1)
   const incrementBad = () => setBad(bad + 1)
 
+  const total = good + neutral + bad;
+
+  const calcAvg = () => total !== 0 ? (good + (bad * -1)) / total : 'N/A';
+  const calcPos = () => total !== 0 ? (good / total) * 100 : 'N/A';
+
   return (
     <main>
       <h1>Give Feedback</h1>
@@ -23,7 +28,10 @@ const App = () => {
       <h2>Statistics</h2>
       good {good} <br />
       neutral {neutral} <br />
-      bad {bad}
+      bad {bad} <br />
+      all {total} <br />
+      average {calcAvg()}<br />
+      positive {calcPos()}%
     </main>
   )
 }
