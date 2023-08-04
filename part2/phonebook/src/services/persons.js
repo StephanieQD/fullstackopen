@@ -11,12 +11,17 @@ const create = newObject => {
   return request.then(response => response.data)
 }
 
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then(response => response.data);
+}
+
 const deletePerson = id => {
   const request = axios.delete(`${baseUrl}/${id}`)
   return request
 }
 
 
-const service = { getAll, create, deletePerson } // Assigning so ESLint doesn't yell at me...
+const service = { getAll, create, update, deletePerson } // Assigning so ESLint doesn't yell at me...
 
 export default service; 

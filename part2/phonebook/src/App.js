@@ -24,11 +24,23 @@ const App = () => {
       const duplicate = persons.filter((person) =>
         person.name === newName
       )
-
+      const newPerson = {"name" : newName, "number": newNumber}
       if (duplicate.length > 0) {
-        alert(`${newName} is already added to phonebook`);
+        // Have to break this out separately otherwise cancelling will allow creation of item with duplicate name
+        if ( window.confirm(`${duplicate[0].name} is already in the phonebook, replace the old number with the new number?
+        (${duplicate[0].number} --> ${newNumber})`) ) {
+          personService
+            .update(duplicate[0].id, newPerson)
+            .then((updatedPerson ) => {
+              setPersons(
+                persons.map(person => (person.name === newName ? updatedPerson : person))
+              )
+              setNewName('')
+              setNewNumber('')
+            })
+        }
       } else {
-        const newPerson = {"name" : newName, "number": newNumber}
+        
         personService
           .create(newPerson)
           .then(createdPerson => {
