@@ -43,6 +43,24 @@ const App = () => {
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleSearchChange = (event) => setSearch(event.target.value)
+  const deletePerson = (id) => {
+    const personToDel = persons.filter((person) =>
+      person.id === id
+    )
+
+    if (personToDel.length > 0 && window.confirm(`Do you want to delete ${personToDel[0].name}?`)) {
+      console.log('Deleting...');
+      personService
+        .deletePerson(id)
+        .then((req) => {
+          console.log(req)
+          const newList = persons.filter((person) =>
+            person.id !== id
+          )
+          setPersons(newList)
+        })
+    }
+  }
 
   return (
     <div>
@@ -54,7 +72,7 @@ const App = () => {
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} search={search} />
+      <Persons persons={persons} search={search} deletePerson={deletePerson} />
     </div>
   )
 }

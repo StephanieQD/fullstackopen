@@ -21,19 +21,9 @@
       "id": 4
     },
     {
-      "name": "New Person",
-      "number": "123-123-1234",
+      "name": "Subsequent Person",
+      "number": "321-321-3210",
       "id": 5
-    },
-    {
-      "name": "Testing Fellow",
-      "number": "987-654-3210",
-      "id": 6
-    },
-    {
-      "name": "Further Example",
-      "number": "111-222-3333",
-      "id": 7
     }
   ]
 }
