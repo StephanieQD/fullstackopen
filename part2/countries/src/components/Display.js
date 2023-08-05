@@ -1,7 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Country from './Country'
 
-const Display = ({countries, search}) => {
+const CountryListing = ({country}) => {
+  const [showFull, setShowFull] = useState(false)
+  return (
+    <div>
+      {country.name.common} <button onClick={() => setShowFull(!showFull)}>{showFull ? 'Hide' : 'Show'} Info</button>
+      { showFull && <Country country={country} /> }
+    </div>
+  )
+}
+
+
+const Display = ({countries}) => {
   if (countries.length > 10) {
     return (
       <p>
@@ -16,12 +27,10 @@ const Display = ({countries, search}) => {
     return (
       <>
         <p>Found {countries.length} matching countries</p>
-        <ul>
           {countries
-            .map((country, i) =>
-            <li key={i}> {country.name.common}</li>
+            .map((country) =>
+            <CountryListing key={country.cca3} country={country} />
           )}
-        </ul>
       </>
     )
   }

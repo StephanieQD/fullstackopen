@@ -12,3 +12,14 @@ main {
   max-width: 600px;
   margin: 50px auto;
 }
+
+.country-info {
+  background: #e7e9ed;
+  padding: 2em;
+  margin: 0.5em 0;
+  border-radius: 9px;
+}
+
+.country-info h2 {
+  margin: 0;
+}

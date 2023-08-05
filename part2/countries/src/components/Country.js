@@ -3,10 +3,10 @@ import React from 'react'
 const Country = ({country}) => {
   console.log(country)
   return (
-    <div>
+    <div className="country-info">
       <h2>{country.name.common}</h2>
       <p><b>Capital:</b> {country.capital[0]}</p>
-      <p><b>Area:</b> {country.area}</p>
+      <p><b>Area:</b> {country.area} km<sup>2</sup></p>
       <h3>Languages</h3>
       <ul>
       {
