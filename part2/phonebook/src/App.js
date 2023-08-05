@@ -4,11 +4,24 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="toast">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     personService
@@ -29,24 +42,31 @@ const App = () => {
         // Have to break this out separately otherwise cancelling will allow creation of item with duplicate name
         if ( window.confirm(`${duplicate[0].name} is already in the phonebook, replace the old number with the new number?
         (${duplicate[0].number} --> ${newNumber})`) ) {
+          setNewName('')
+          setNewNumber('')
+          setNotification(`Updating ${newName}...`)
           personService
             .update(duplicate[0].id, newPerson)
             .then((updatedPerson ) => {
+              setNotification(null)
+              setNotification(`Updated ${updatedPerson.name}!`)
+              setTimeout(() => {setNotification(null)}, 3000)
               setPersons(
                 persons.map(person => (person.name === newName ? updatedPerson : person))
               )
-              setNewName('')
-              setNewNumber('')
             })
         }
       } else {
-        
+        setNotification(`Adding ${newName}...`)
+        setNewName('')
+        setNewNumber('')
         personService
           .create(newPerson)
           .then(createdPerson => {
+            setNotification(null)
+            setNotification(`Added ${createdPerson.name}!`)
+            setTimeout(() => {setNotification(null)}, 3000)
             setPersons(persons.concat(createdPerson));
-            setNewName('');
-            setNewNumber('');
           })
       }
     }
@@ -61,7 +81,7 @@ const App = () => {
     )
 
     if (personToDel.length > 0 && window.confirm(`Do you want to delete ${personToDel[0].name}?`)) {
-      console.log('Deleting...');
+      setNotification(`Deleting ${personToDel[0].name}...`)
       personService
         .deletePerson(id)
         .then((req) => {
@@ -70,12 +90,16 @@ const App = () => {
             person.id !== id
           )
           setPersons(newList)
+          setNotification(null)
+          setNotification(`Deleted ${personToDel[0].name}!`)
+          setTimeout(() => {setNotification(null)}, 3000)
         })
     }
   }
 
   return (
-    <div>
+    <main>
+      <Notification message={notification} />
       <h2>Phonebook</h2>
       <Filter search={search} handleSearchChange={handleSearchChange} />
       <h2>Add person to phonebook</h2>
@@ -85,7 +109,7 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <Persons persons={persons} search={search} deletePerson={deletePerson} />
-    </div>
+    </main>
   )
 }
 
