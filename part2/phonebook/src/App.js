@@ -55,6 +55,12 @@ const App = () => {
                 persons.map(person => (person.name === newName ? updatedPerson : person))
               )
             })
+            .catch(error => {
+              console.log(error)
+              setNotification(null)
+              setNotification(`Something went wrong, Unable to update ${newName}`)
+              setTimeout(() => {setNotification(null)}, 2500)
+            })
         }
       } else {
         setNotification(`Adding ${newName}...`)
@@ -67,6 +73,12 @@ const App = () => {
             setNotification(`Added ${createdPerson.name}!`)
             setTimeout(() => {setNotification(null)}, 3000)
             setPersons(persons.concat(createdPerson));
+          })
+          .catch(error => {
+            console.log(error)
+            setNotification(null)
+            setNotification(`Something went wrong, ${newName} not added to the server...`)
+            setTimeout(() => {setNotification(null)}, 2500)
           })
       }
     }
@@ -93,6 +105,16 @@ const App = () => {
           setNotification(null)
           setNotification(`Deleted ${personToDel[0].name}!`)
           setTimeout(() => {setNotification(null)}, 3000)
+        })
+        .catch(error => {
+          console.log(error)
+          setNotification(null)
+          setNotification(`${personToDel[0].name} appears to have already been removed from the server.`)
+          setTimeout(() => {setNotification(null)}, 2500)
+          const newList = persons.filter((person) =>
+            person.id !== id
+          )
+          setPersons(newList)
         })
     }
   }

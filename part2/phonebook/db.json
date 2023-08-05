@@ -19,26 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Subsequent Person",
-      "number": "321-321-3210",
-      "id": 5
-    },
-    {
-      "name": "Some Guy",
-      "number": "123456789",
-      "id": 8
-    },
-    {
-      "name": "Some Other",
-      "number": "123-123-1234",
-      "id": 14
-    },
-    {
-      "name": "New Person",
-      "number": "3213213211",
-      "id": 15
     }
   ]
 }
