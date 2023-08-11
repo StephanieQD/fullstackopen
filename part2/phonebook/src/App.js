@@ -42,12 +42,12 @@ const App = () => {
         // Have to break this out separately otherwise cancelling will allow creation of item with duplicate name
         if ( window.confirm(`${duplicate[0].name} is already in the phonebook, replace the old number with the new number?
         (${duplicate[0].number} --> ${newNumber})`) ) {
-          setNewName('')
-          setNewNumber('')
           setNotification(`Updating ${newName}...`)
           personService
             .update(duplicate[0].id, newPerson)
             .then((updatedPerson ) => {
+			  setNewName('')
+              setNewNumber('')
               setNotification(null)
               setNotification(`Updated ${updatedPerson.name}!`)
               setTimeout(() => {setNotification(null)}, 3000)
@@ -58,7 +58,20 @@ const App = () => {
             .catch(error => {
               console.log(error)
               setNotification(null)
-              setNotification(`Something went wrong, Unable to update ${newName}`)
+			  let reportedError = ''
+			  if (error.response.data.error) {
+				reportedError = error.response.data.error
+			  }
+			  
+			  if(reportedError.includes("number")) {
+				if (reportedError.includes("is shorter")) {
+				  setNotification(`The number "${newNumber}" is too short. Try again with a longer number`)
+				} else {
+				  setNotification(`The number "${newNumber}" is in the wrong format, must be at least 8 characters and have a hyphen between the 2nd or 3rd digit.`)
+				}
+			  } else {
+                setNotification(`Something went wrong, Unable to update ${newName}`)
+			  }
               setTimeout(() => {setNotification(null)}, 2500)
             })
         }
@@ -83,7 +96,6 @@ const App = () => {
 			if (error.response.data.error) {
 				reportedError = error.response.data.error
 			}
-			
 			
 			if (reportedError.includes("name") && reportedError.includes("is shorter")) {
 				setNotification(`The name "${newName}" is too short. Try again with a longer name`)
