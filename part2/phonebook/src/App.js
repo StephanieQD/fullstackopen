@@ -64,20 +64,26 @@ const App = () => {
         }
       } else {
         setNotification(`Adding ${newName}...`)
-        setNewName('')
-        setNewNumber('')
         personService
           .create(newPerson)
           .then(createdPerson => {
+			setNewName('')
+			setNewNumber('')
             setNotification(null)
             setNotification(`Added ${createdPerson.name}!`)
-            setTimeout(() => {setNotification(null)}, 3000)
+            setTimeout(() => {setNotification(null)}, 2500)
             setPersons(persons.concat(createdPerson));
           })
           .catch(error => {
             console.log(error)
+			//console.log(error.response.data.error)
             setNotification(null)
-            setNotification(`Something went wrong, ${newName} not added to the server...`)
+			if (error.response.data.error) {
+				setNotification(`The name "${newName}" is too short. Try again with a longer name`)
+			} else {
+				setNotification(`Something went wrong, ${newName} not added to the server...`)
+			}
+            
             setTimeout(() => {setNotification(null)}, 2500)
           })
       }
@@ -129,7 +135,7 @@ const App = () => {
         addPerson={addPerson} newName={newName} newNumber={newNumber}
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
       />
-      <h2>Numbers</h2>
+      <h2>Contacts</h2>
       <Persons persons={persons} search={search} deletePerson={deletePerson} />
     </main>
   )

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Filter = ({search, handleSearchChange}) => {
   return (
-    <p>filter shown with <input value={search} onChange={handleSearchChange} /> </p>
+    <form><label>Search by name <input type="text" value={search} onChange={handleSearchChange} /></label></form>
   )
 }
 

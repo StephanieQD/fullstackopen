@@ -5,7 +5,13 @@ const Persons = ({persons, search, deletePerson}) => {
     <div>
       {persons
         .filter((person) => person.name.toLowerCase().includes(search.toLowerCase()))
-        .map((person) => <p key={person.id}>{person.name} {person.number} <button onClick={() => deletePerson(person.id)}>delete</button></p>)}
+        .map((person) => <div className="person" key={person.id}>
+			<span className="info">
+				<span className="name">{person.name}</span>
+				<span className="number">{person.number}</span>
+			</span>
+			<button onClick={() => deletePerson(person.id)}>&#10005; delete</button>
+		</div>)}
     </div>
   )
 }
