@@ -76,10 +76,23 @@ const App = () => {
           })
           .catch(error => {
             console.log(error)
-			//console.log(error.response.data.error)
+			console.log(error.response.data.error)
             setNotification(null)
+			
+			let reportedError = ''
 			if (error.response.data.error) {
+				reportedError = error.response.data.error
+			}
+			
+			
+			if (reportedError.includes("name") && reportedError.includes("is shorter")) {
 				setNotification(`The name "${newName}" is too short. Try again with a longer name`)
+			} else if(reportedError.includes("number")) {
+				if (reportedError.includes("is shorter")) {
+					setNotification(`The number "${newNumber}" is too short. Try again with a longer number`)
+				} else {
+					setNotification(`The number "${newNumber}" is in the wrong format, must be at least 8 characters and have a hyphen between the 2nd or 3rd digit.`)
+				}
 			} else {
 				setNotification(`Something went wrong, ${newName} not added to the server...`)
 			}
