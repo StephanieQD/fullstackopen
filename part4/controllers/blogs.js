@@ -1,4 +1,4 @@
-const blogsRouter = require("express").Router()
+const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
 
