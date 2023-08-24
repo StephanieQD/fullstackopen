@@ -109,3 +109,27 @@ describe('Favorite Blog (with the most likes)', () => {
   })
 })
 
+describe('Most Prolific Blogger (with the most blogs written)', () => {
+  test('of empty list is zero', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toBe(0)
+  })
+
+  test('when list has only one blog, return just that one', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1,
+    })
+  })
+
+  test('From the full list of blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+  })
+})
+
+
