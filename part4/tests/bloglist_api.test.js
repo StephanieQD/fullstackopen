@@ -79,6 +79,18 @@ describe('addition of a new blog without a likes property', () => {
   })
 })
 
+describe('Should fail if things (title, URL) are not set', () => {
+  test('should return a 400 error', async () => {
+    await api
+      .post('/api/blogs')
+      .send({ author: 'Stephanie Q' })
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
