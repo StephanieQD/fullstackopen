@@ -130,6 +130,27 @@ describe('deletion of a blog', () => {
   })
 })
 
+/*--------------------------------------------------
+ # Update test
+ --------------------------------------------------*/
+describe('updating of a blog', () => {
+  test('succeeds if ID is valid', async () => {
+    const updatedProps = {
+      likes: 222
+    }
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedProps)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(updatedBlog.body.likes).toBe(updatedProps.likes)
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
