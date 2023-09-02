@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+  "title": "Something New",
+  "author": "Broken Stephie",
+  "url": "https://fullstackopen.com/en/part4/testing_the_backend#exercises-4-8-4-12",
+  "likes": 17
+}
