@@ -1,9 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-//const helper = require('../tests/test_helper')
-const jwt = require('jsonwebtoken')
-
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -17,11 +13,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response, next) => {
   const { title, author, url, likes } = request.body
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
 
   const blog = new Blog({
     title,
@@ -47,14 +39,10 @@ blogsRouter.post('/', async (request, response, next) => {
  # Delete a blog by ID
  --------------------------------------------------*/
 blogsRouter.delete('/:id', async (request, response, next) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
+  const user = request.user
   const blog = await Blog.findById(request.params.id)
 
-  if ( !blog.user || blog.user.toString() !== decodedToken.id.toString() ) {
+  if ( ! blog.user || blog.user.toString() !== user.id.toString() ) {
     return response.status(401).json({ error: 'blog must be created by same user for deletion' })
   }
 
