@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZXBoaWUiLCJpZCI6IjY0ZjI3ZmFhMmRmM2M2MDcyYTM1MGQ2ZiIsImlhdCI6MTY5NDcxMjkyNX0.9yf2B2sU8aFykjp82Q6yttC0vQ2kV5nVJl9V-HV6zqw
 
 {
-  "title": "Something entirely different",
+  "title": "Dreaming...",
   "author": "Broken Stephie",
   "url": "https://fullstackopen.com/en/part4/user_administration#creating-a-new-note",
-  "likes": 15
+  "likes": 21
 }
