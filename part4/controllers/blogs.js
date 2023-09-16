@@ -15,6 +15,10 @@ blogsRouter.post('/', async (request, response, next) => {
 
   const user = request.user
 
+  if ( ! user || ! user._id ) {
+    return response.status(401).json({ error: 'Unauthorized: User not found' })
+  }
+
   const blog = new Blog({
     title,
     author,

@@ -2,20 +2,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 
-const initialBlogs = [
-  {
-    title: 'JS Mastery',
-    author: 'Adrian Hajdin',
-    url: 'https://www.jsmastery.pro/full-stack-web-development-bootcamp',
-    likes: 7
-  },
-  {
-    title: 'async function - JavaScript | MDN',
-    author: 'Mozilla',
-    url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function',
-    likes: 5
-  }
-]
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
@@ -27,6 +13,28 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
+
+const getInitialBlogs = async () => {
+  const users = await usersInDb()
+
+  return [
+    {
+      title: 'JS Mastery',
+      author: 'Adrian Hajdin',
+      url: 'https://www.jsmastery.pro/full-stack-web-development-bootcamp',
+      likes: 7,
+      user: users[0].id
+    },
+    {
+      title: 'async function - JavaScript | MDN',
+      author: 'Mozilla',
+      url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function',
+      likes: 5,
+      user: users[0].id
+    }
+  ]
+}
+
 module.exports = {
-  initialBlogs, blogsInDb, usersInDb
+  getInitialBlogs, blogsInDb, usersInDb
 }
