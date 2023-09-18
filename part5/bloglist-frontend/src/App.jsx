@@ -9,6 +9,9 @@ const App = () => {
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [title, setTitle] = useState('') 
+  const [author, setAuthor] = useState('') 
+  const [url, setUrl] = useState('') 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -21,6 +24,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -41,6 +45,8 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogUser', JSON.stringify(user)
       )
+
+      blogService.setToken(user.token)
       
       setUser(user)
       setUsername('')
@@ -52,6 +58,74 @@ const App = () => {
       }, 5000)
     }
   }
+
+  const handleBlogSubmission = async (event) => {
+    event.preventDefault()
+
+    if ( ! author || ! url || ! title ) {
+      setErrorMessage('Please finish filling out blog form...')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      return
+    }
+    
+    try {
+      const newBlog = await blogService.create({
+        title, author, url
+      })
+      setBlogs(blogs.concat(newBlog))
+      // Clear the form out
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+    } catch (exception) {
+      console.log(exception)
+      setErrorMessage('Something went wrong...')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const newBlogForm = () => (
+    <form onSubmit={handleBlogSubmission}>
+      <div>
+        <label>
+          Title
+          <input
+            type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Author
+          <input
+            type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          URL
+          <input
+            type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </label>
+      </div>
+      <button type="submit">create new blog</button>
+    </form>      
+  )
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -95,6 +169,7 @@ const App = () => {
       {user === null && loginForm()}
       {user && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button> </p>
+        {newBlogForm()}
         {blogList()}
       </div>}
       {errorMessage !== null && errorMessage}
