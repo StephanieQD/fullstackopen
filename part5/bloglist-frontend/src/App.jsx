@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -8,7 +9,8 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [type, setType] = useState('good')
   const [title, setTitle] = useState('') 
   const [author, setAuthor] = useState('') 
   const [url, setUrl] = useState('') 
@@ -52,9 +54,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setType('bad')
+      setNotification('Wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -63,9 +66,10 @@ const App = () => {
     event.preventDefault()
 
     if ( ! author || ! url || ! title ) {
-      setErrorMessage('Please finish filling out blog form...')
+      setType('bad')
+      setNotification('Please finish filling out blog form...')
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
       return
     }
@@ -74,6 +78,12 @@ const App = () => {
       const newBlog = await blogService.create({
         title, author, url
       })
+
+      setType('good')
+      setNotification(`New blog "${newBlog.title}" by ${newBlog.author} added`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
       setBlogs(blogs.concat(newBlog))
       // Clear the form out
       setAuthor('')
@@ -81,9 +91,10 @@ const App = () => {
       setUrl('')
     } catch (exception) {
       console.log(exception)
-      setErrorMessage('Something went wrong...')
+      setType('bad')
+      setNotification('Something went wrong...')
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -132,7 +143,7 @@ const App = () => {
       <div>
         <label>
           username
-            <input
+          <input
             type="text"
             value={username}
             name="Username"
@@ -143,7 +154,7 @@ const App = () => {
       <div>
         <label>
           password
-            <input
+          <input
             type="password"
             value={password}
             name="Password"
@@ -165,15 +176,15 @@ const App = () => {
   )
 
   return (
-    <div>
+    <main>
+      {notification !== null && <Notification message={notification} type={type} />}
       {user === null && loginForm()}
       {user && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button> </p>
         {newBlogForm()}
         {blogList()}
       </div>}
-      {errorMessage !== null && errorMessage}
-    </div>
+    </main>
   )
 }
 

@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  max-width: 500px;
+  margin: 10px auto;
+}
+
+.notification {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  margin: 0 auto;
+}
+
+.notification.good {
+  border-left: 15px solid #55a55d;
+}
+
+.notification.bad {
+  border-left: 15px solid #d51a18;
+}
+
+input[type=text], input[type=password] {
+  background: #fbfbfb;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 8px 0;
+  padding: 0.9em 1.25em;
+  width: 100%;
+}
+
