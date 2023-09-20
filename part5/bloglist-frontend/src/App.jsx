@@ -76,6 +76,7 @@ const App = () => {
 
     try {
       const newBlog = await blogService.create(blogToAdd)
+      newBlog.user = user
       blogFormRef.current.toggleVisibility()
       setType('good')
       setNotification(`New blog "${newBlog.title}" by ${newBlog.author} added`)
