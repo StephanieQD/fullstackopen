@@ -135,7 +135,8 @@ const App = () => {
       {notification !== null && <Notification message={notification} type={type} />}
       {user === null && loginForm()}
       {user && <div>
-        <p>{user.name} logged in <button onClick={handleLogout}>Logout</button> </p>
+        <p>{user.name} logged in 
+          <button  className="grey" onClick={handleLogout}>Logout</button> </p>
         <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
           <BlogForm createBlog={ handleBlogSubmission } />
         </Togglable>

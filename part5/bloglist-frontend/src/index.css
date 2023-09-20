@@ -40,3 +40,32 @@ input[type=text], input[type=password] {
   width: 100%;
 }
 
+.bloglisting {
+  background: #efefef;
+  padding: 10px;
+  margin: 0.5em 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.bloglisting a {
+  white-space: pre-wrap; /* CSS3 */    
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */    
+  white-space: -o-pre-wrap; /* Opera 7 */    
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+button {
+  border: none;
+  background: #1277CA;
+  margin: 5px;
+  padding: 5px 1em;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.grey {
+  background-color: #6e6e6e;
+}
