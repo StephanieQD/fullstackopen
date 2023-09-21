@@ -15,10 +15,13 @@ const App = () => {
   const [type, setType] = useState('good')
   const blogFormRef = useRef()
 
+  const getBlogs = async () => {
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+  }
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    getBlogs()
   }, [])
 
   useEffect(() => {
@@ -76,18 +79,41 @@ const App = () => {
 
     try {
       const newBlog = await blogService.create(blogToAdd)
-      newBlog.user = user
       blogFormRef.current.toggleVisibility()
       setType('good')
       setNotification(`New blog "${newBlog.title}" by ${newBlog.author} added`)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-      setBlogs(blogs.concat(newBlog))
+      getBlogs()
     } catch (exception) {
       console.log(exception)
       setType('bad')
       setNotification('Something went wrong...')
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
+  const handleBlogUpage = async (BlogToUpdate) => {
+    try {
+      const updatedBlog = await blogService
+        .update(BlogToUpdate)
+      setNotification(
+        `Blog ${BlogToUpdate.title} was successfully updated`
+      )
+
+      console.log('updatedBlog')
+      console.log(updatedBlog)
+      getBlogs()
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch(exception) {
+      setNotification(
+        `Cannot update blog ${BlogToUpdate.title}`
+      )
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -126,7 +152,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateFunc={ handleBlogUpage } />
       )}
     </div>
   )
@@ -137,7 +163,8 @@ const App = () => {
       {user === null && loginForm()}
       {user && <div>
         <p>{user.name} logged in 
-          <button  className="grey" onClick={handleLogout}>Logout</button> </p>
+          <button  className="grey" onClick={handleLogout}>Logout</button>
+        </p>
         <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
           <BlogForm createBlog={ handleBlogSubmission } />
         </Togglable>
