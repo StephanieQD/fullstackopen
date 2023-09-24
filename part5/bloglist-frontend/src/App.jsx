@@ -8,8 +8,8 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const [type, setType] = useState('good')
@@ -52,7 +52,7 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
-      
+
       setUser(user)
       setUsername('')
       setPassword('')
@@ -104,7 +104,7 @@ const App = () => {
         `Blog "${BlogToUpdate.title}" was successfully updated`
       )
       // Remove deleted blog from list
-      let filtered = blogs.filter(function(el) { return el.id != BlogToUpdate.id }) 
+      let filtered = blogs.filter(function(el) { return el.id !== BlogToUpdate.id })
       setBlogs( filtered )
       setTimeout(() => {
         setNotification(null)
@@ -169,7 +169,7 @@ const App = () => {
         </label>
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const blogList = () => (
@@ -192,7 +192,7 @@ const App = () => {
       {notification !== null && <Notification message={notification} type={type} />}
       {user === null && loginForm()}
       {user && <div>
-        <p>{user.name} logged in 
+        <p>{user.name} logged in
           <button  className="grey" onClick={handleLogout}>Logout</button>
         </p>
         <Togglable buttonLabel="Create new blog" ref={blogFormRef}>

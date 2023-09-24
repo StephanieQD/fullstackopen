@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
+
 const Blog = ({ blog, updateFunc, removeFunc, loggedUser }) => {
   const [detailsVisibile, setDetailsVisibile] = useState(false)
 
@@ -32,18 +34,25 @@ const Blog = ({ blog, updateFunc, removeFunc, loggedUser }) => {
   return (
     <div className="bloglisting">
       {blog.title} -- {blog.author}
-      <button onClick={() => setDetailsVisibile( ! detailsVisibile ) }> 
+      <button onClick={() => setDetailsVisibile( ! detailsVisibile ) }>
         { detailsVisibile ? 'hide' : 'show' }
       </button>
       {detailsVisibile && <div>
-        <a target="_blank" href={blog.url}>{blog.url}</a> <br />
+        <a target="_blank" rel="noreferrer" href={blog.url}>{blog.url}</a> <br />
         Likes: {blog.likes}
         <button onClick={incrementLike} >like</button> <br />
         {(blog.user && blog.user.name ) && blog.user.name }
         {showDelete && <button onClick={removeBlog} className='remove'>Delete Blog</button>}
       </div>}
-    </div>  
+    </div>
   )
+}
+
+Blog.propTypes  = {
+  blog: PropTypes.object.isRequired,
+  updateFunc: PropTypes.func.isRequired,
+  removeFunc: PropTypes.func.isRequired,
+  loggedUser: PropTypes.string.isRequired
 }
 
 export default Blog

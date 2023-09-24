@@ -1,7 +1,7 @@
 import { useState } from 'react'
 const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('') 
-  const [author, setAuthor] = useState('') 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const submitBlog = (event) => {
