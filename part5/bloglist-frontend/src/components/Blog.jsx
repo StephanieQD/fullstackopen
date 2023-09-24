@@ -1,7 +1,12 @@
 import { useState } from 'react'
-const Blog = ({ blog, updateFunc }) => {
+const Blog = ({ blog, updateFunc, removeFunc, loggedUser }) => {
   const [detailsVisibile, setDetailsVisibile] = useState(false)
 
+  let showDelete = false
+
+  if (blog.user && blog.user.name && blog.user.name === loggedUser) {
+    showDelete = true
+  }
   const incrementLike = () => {
     let updatedBlog = {
       likes: blog.likes + 1,
@@ -17,6 +22,13 @@ const Blog = ({ blog, updateFunc }) => {
 
     updateFunc(updatedBlog)
   }
+
+  const removeBlog = () => {
+    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+      removeFunc(blog)
+      console.log(`Removing blog "${blog.title}" by ${blog.author}...`)
+    }
+  }
   return (
     <div className="bloglisting">
       {blog.title} -- {blog.author}
@@ -28,6 +40,7 @@ const Blog = ({ blog, updateFunc }) => {
         Likes: {blog.likes}
         <button onClick={incrementLike} >like</button> <br />
         {(blog.user && blog.user.name ) && blog.user.name }
+        {showDelete && <button onClick={removeBlog} className='remove'>Delete Blog</button>}
       </div>}
     </div>  
   )

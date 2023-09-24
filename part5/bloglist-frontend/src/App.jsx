@@ -96,7 +96,31 @@ const App = () => {
     }
   }
 
-  const handleBlogUpage = async (BlogToUpdate) => {
+  const handleBlogDelete = async (BlogToUpdate) => {
+    try {
+      const deletedBlog = await blogService
+        .deleteBlog(BlogToUpdate)
+      setNotification(
+        `Blog "${BlogToUpdate.title}" was successfully updated`
+      )
+      // Remove deleted blog from list
+      let filtered = blogs.filter(function(el) { return el.id != BlogToUpdate.id }) 
+      setBlogs( filtered )
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch(exception) {
+      setNotification(
+        `Cannot remove blog ${BlogToUpdate.title}`
+      )
+      console.log(exception)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
+  const handleBlogUpdate = async (BlogToUpdate) => {
     try {
       const updatedBlog = await blogService
         .update(BlogToUpdate)
@@ -152,7 +176,13 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} updateFunc={ handleBlogUpage } />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateFunc={ handleBlogUpdate }
+          removeFunc={ handleBlogDelete }
+          loggedUser={ user.name }
+        />
       )}
     </div>
   )

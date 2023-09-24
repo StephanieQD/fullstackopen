@@ -69,3 +69,9 @@ button {
 button.grey {
   background-color: #6e6e6e;
 }
+
+button.remove {
+  display: block;
+  background: #d51a18;
+  color: #fff;
+}
