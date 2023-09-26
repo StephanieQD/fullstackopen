@@ -34,7 +34,7 @@ const Blog = ({ blog, updateFunc, removeFunc, loggedUser }) => {
   return (
     <div className="bloglisting">
       {blog.title} -- {blog.author}
-      <button onClick={() => setDetailsVisibile( ! detailsVisibile ) }>
+      <button className="vistoggle" onClick={() => setDetailsVisibile( ! detailsVisibile ) }>
         { detailsVisibile ? 'hide' : 'show' }
       </button>
       {detailsVisibile && <div>
