@@ -40,7 +40,7 @@ const Blog = ({ blog, updateFunc, removeFunc, loggedUser }) => {
       {detailsVisibile && <div>
         <a target="_blank" rel="noreferrer" href={blog.url}>{blog.url}</a> <br />
         Likes: {blog.likes}
-        <button onClick={incrementLike} >like</button> <br />
+        <button className="likebtn" onClick={incrementLike} >like</button> <br />
         {(blog.user && blog.user.name ) && blog.user.name }
         {showDelete && <button onClick={removeBlog} className='remove'>Delete Blog</button>}
       </div>}

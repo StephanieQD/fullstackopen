@@ -17,19 +17,23 @@ describe('Test blog component', () => {
 
   const mockFunc = jest.fn()
 
-  /*--------------------------------------------------
-   # Test initial render
-   --------------------------------------------------*/
-  test('Initial render', () => {
-    const { container } = render(
+  let container
+
+  beforeEach(() => {
+    container = render(
       <Blog
         blog={blog}
         updateFunc={mockFunc}
         removeFunc={mockFunc}
         loggedUser="Some Guy"
       />
-    )
+    ).container
+  })
 
+  /*--------------------------------------------------
+   # Test initial render
+   --------------------------------------------------*/
+  test('Initial render', () => {
     const div = container.querySelector('.bloglisting')
     expect(div).toHaveTextContent(
       'I wish my dad was still alive -- Mourning Stephie'
@@ -46,15 +50,6 @@ describe('Test blog component', () => {
    # Ensure URL and likes are visible after click
    --------------------------------------------------*/
   test('Ensure URL and likes are visible after click', async () => {
-    const { container } = render(
-      <Blog
-        blog={blog}
-        updateFunc={mockFunc}
-        removeFunc={mockFunc}
-        loggedUser="Some Guy"
-      />
-    )
-
     const user = userEvent.setup()
     const button = container.querySelector('.vistoggle')
     await user.click(button)
@@ -67,5 +62,22 @@ describe('Test blog component', () => {
     expect(updatedDiv).toHaveTextContent(
       'https://fullstackopen.com/en/part5/testing_react_apps'
     )
+  })
+  /*--------------------------------------------------
+   # Ensure updateFunc is called twice.
+   --------------------------------------------------*/
+  test('Ensure updateFunc is called clickling "like" twice', async () => {
+    // First we need to click the show button to make like button accessible.
+    const user = userEvent.setup()
+    const visButton = container.querySelector('.vistoggle')
+    await user.click(visButton)
+
+    const updatedDiv = container.querySelector('.bloglisting')
+    const likeButton = updatedDiv.querySelector('.likebtn')
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockFunc.mock.calls).toHaveLength(2)
   })
 })
