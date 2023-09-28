@@ -150,6 +150,7 @@ const App = () => {
         <label>
           username
           <input
+            id="username"
             type="text"
             value={username}
             name="Username"
@@ -161,6 +162,7 @@ const App = () => {
         <label>
           password
           <input
+            id="password"
             type="password"
             value={password}
             name="Password"
@@ -168,7 +170,7 @@ const App = () => {
           />
         </label>
       </div>
-      <button type="submit">login</button>
+      <button id="submit-login" type="submit">login</button>
     </form>
   )
 
