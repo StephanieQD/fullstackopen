@@ -74,6 +74,19 @@ describe('Blog app', function() {
         cy.contains('Living for the moment -- Happy Jeffy')
           .contains('Likes: 1')
       })
+
+      it('Can delete a blog', function() {
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .contains('show')
+          .click()
+
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .contains('Delete Blog')
+          .click()
+
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .should('not.exist')
+      })
     })
   })
 })
