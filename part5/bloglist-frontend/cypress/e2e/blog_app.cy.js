@@ -35,18 +35,45 @@ describe('Blog app', function() {
   describe('When logged in', function() {
     beforeEach(function() {
       // log in user
-      cy.get('#username').type('stephie')
-      cy.get('#password').type('imsad')
-      cy.get('#submit-login').click()
+      cy.request('POST', 'http://localhost:3003/api/login', {
+        username: 'stephie', password: 'imsad'
+      }).then(response => {
+        localStorage.setItem('loggedBlogUser', JSON.stringify(response.body))
+        cy.visit('http://localhost:5173')
+      })
     })
 
-    it('A blog can be created', function() {
+    it('A new blog can be created', function() {
       cy.get('#create-new-blog').click()
       cy.get('#blog-title').type('Living for the moment')
       cy.get('#blog-author').type('Happy Jeffy')
       cy.get('#blog-url').type('https://fullstackopen.com/en/part5/end_to_end_testing')
       cy.get('#submit-blog').click()
       cy.contains('Living for the moment -- Happy Jeffy')
+    })
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.get('#create-new-blog').click()
+        cy.get('#blog-title').type('Living for the moment')
+        cy.get('#blog-author').type('Happy Jeffy')
+        cy.get('#blog-url').type('https://fullstackopen.com/en/part5/end_to_end_testing')
+        cy.get('#submit-blog').click()
+        cy.contains('Living for the moment -- Happy Jeffy')
+      })
+
+      it('Can like a blog', function() {
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .contains('show')
+          .click()
+
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .contains('like')
+          .click()
+
+        cy.contains('Living for the moment -- Happy Jeffy')
+          .contains('Likes: 1')
+      })
     })
   })
 })
