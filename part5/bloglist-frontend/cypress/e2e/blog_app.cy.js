@@ -31,4 +31,22 @@ describe('Blog app', function() {
         .and('have.css', 'border-left-color', 'rgb(213, 26, 24)')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      // log in user
+      cy.get('#username').type('stephie')
+      cy.get('#password').type('imsad')
+      cy.get('#submit-login').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.get('#create-new-blog').click()
+      cy.get('#blog-title').type('Living for the moment')
+      cy.get('#blog-author').type('Happy Jeffy')
+      cy.get('#blog-url').type('https://fullstackopen.com/en/part5/end_to_end_testing')
+      cy.get('#submit-blog').click()
+      cy.contains('Living for the moment -- Happy Jeffy')
+    })
+  })
 })
