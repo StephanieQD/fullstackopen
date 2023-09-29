@@ -9,6 +9,13 @@ describe('Blog app', function() {
       password: 'imsad'
     }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+
+    const user2 = {
+      name: 'Tree Trunks',
+      username: 'treetrunks',
+      password: 'mrpig'
+    }
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
   })
 
   it('Login form is shown', function() {
@@ -35,12 +42,7 @@ describe('Blog app', function() {
   describe('When logged in', function() {
     beforeEach(function() {
       // log in user
-      cy.request('POST', 'http://localhost:3003/api/login', {
-        username: 'stephie', password: 'imsad'
-      }).then(response => {
-        localStorage.setItem('loggedBlogUser', JSON.stringify(response.body))
-        cy.visit('http://localhost:5173')
-      })
+      cy.login({ username: 'stephie', password: 'imsad' })
     })
 
     it('A new blog can be created', function() {
@@ -54,6 +56,11 @@ describe('Blog app', function() {
 
     describe('and a blog exists', function () {
       beforeEach(function () {
+        const demoBlog = {
+          title: 'Living for the moment',
+          author: 'Happy Jeffy',
+          url: 'https://fullstackopen.com/en/part5/end_to_end_testing',
+        }
         cy.get('#create-new-blog').click()
         cy.get('#blog-title').type('Living for the moment')
         cy.get('#blog-author').type('Happy Jeffy')
@@ -85,6 +92,28 @@ describe('Blog app', function() {
           .click()
 
         cy.contains('Living for the moment -- Happy Jeffy')
+          .should('not.exist')
+      })
+
+      it('Other users can\'t delete blog', function() {
+        // Create a new blog
+        cy.get('#create-new-blog').click()
+        cy.get('#blog-title').type('This is a new blog')
+        cy.get('#blog-author').type('Crybaby Stephie')
+        cy.get('#blog-url').type('http://localhost:5173/')
+        cy.get('#submit-blog').click()
+
+        cy.wait(500)
+
+        cy.contains('Logout').click()
+        cy.get('#username').type('treetrunks')
+        cy.get('#password').type('mrpig')
+        cy.get('#submit-login').click()
+        cy.contains('This is a new blog -- Crybaby Stephie')
+          .contains('show')
+          .click()
+        cy.contains('This is a new blog -- Crybaby Stephie')
+          .contains('Delete Blog')
           .should('not.exist')
       })
     })
