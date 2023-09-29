@@ -117,5 +117,59 @@ describe('Blog app', function() {
           .should('not.exist')
       })
     })
+    describe('Verify blog listings are sorted by likes', function () {
+      it('Sorted by likes', function() {
+        // Create 3 blogs
+        cy.get('#create-new-blog').click()
+        cy.get('#blog-title').type('This is blog #1')
+        cy.get('#blog-author').type('Jane Doe')
+        cy.get('#blog-url').type('http://localhost:5173/blog-1')
+        cy.get('#submit-blog').click()
+        cy.wait(500)
+
+        cy.get('#create-new-blog').click()
+        cy.get('#blog-title').type('This is blog #2')
+        cy.get('#blog-author').type('Jane Doe')
+        cy.get('#blog-url').type('http://localhost:5173/blog-2')
+        cy.get('#submit-blog').click()
+        cy.wait(500)
+
+        cy.get('#create-new-blog').click()
+        cy.get('#blog-title').type('This blog is the most popular')
+        cy.get('#blog-author').type('Jane Doe')
+        cy.get('#blog-url').type('http://localhost:5173/blog-3')
+        cy.get('#submit-blog').click()
+        cy.wait(500)
+
+        // Get all the blogs
+        cy.contains('This is blog #1').as('blog1')
+        cy.contains('This is blog #2').as('blog2')
+        cy.contains('This blog is the most popular').as('blog3')
+
+        // Click the show more button for all
+        cy.get('@blog1').contains('show').click()
+        cy.get('@blog2').contains('show').click()
+        cy.get('@blog3').contains('show').click()
+
+        // Add likes
+        cy.get('@blog1').contains('like').click()
+        cy.wait(500)
+        cy.get('@blog2').contains('like').click()
+        cy.wait(500)
+        cy.get('@blog2').contains('like').click()
+        cy.wait(500)
+        cy.get('@blog3').contains('like').click()
+        cy.wait(500)
+        cy.get('@blog3').contains('like').click()
+        cy.wait(500)
+        cy.get('@blog3').contains('like').click()
+        cy.wait(500)
+
+        // Verify order
+        cy.get('.bloglisting').eq(0).should('contain', 'This blog is the most popular')
+        cy.get('.bloglisting').eq(1).should('contain', 'This is blog #2')
+        cy.get('.bloglisting').eq(2).should('contain', 'This is blog #1')
+      })
+    })
   })
 })

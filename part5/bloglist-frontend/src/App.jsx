@@ -177,15 +177,17 @@ const App = () => {
   const blogList = () => (
     <div>
       <h2>blogs</h2>
-      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateFunc={ handleBlogUpdate }
-          removeFunc={ handleBlogDelete }
-          loggedUser={ user.name }
-        />
-      )}
+      <div className="all-blogs">
+        {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateFunc={ handleBlogUpdate }
+            removeFunc={ handleBlogDelete }
+            loggedUser={ user.name }
+          />
+        )}
+      </div>
     </div>
   )
 
