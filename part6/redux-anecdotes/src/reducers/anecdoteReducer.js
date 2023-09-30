@@ -34,6 +34,13 @@ const reducer = (state = initialState, action) => {
       return state.map(quote =>
         quote.id !== id ? quote : changedQuote
       )
+    case 'ADD':
+      const newQuote = {
+        content: action.payload.content,
+        id: getId(),
+        votes: 0
+      }
+      return state.concat(newQuote)
     case 'ZERO':
       return initialState
     default: return state
