@@ -42,6 +42,7 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
   switch (action.type) {
     case 'DO_NOTHING':
+      return state
     case 'VOTE':
       const id = action.payload.id
       const quoteToChange = state.find(n => n.id === id)

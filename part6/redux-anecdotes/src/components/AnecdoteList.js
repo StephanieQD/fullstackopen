@@ -1,8 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { castVote } from '../reducers/anecdoteReducer'
 
-const AnecdoteForm = () => {
-  const anecdotes = useSelector(state => state)
+const AnecdoteList = () => {
+  const anecdotes = useSelector(({filter, anecdotes}) => {
+    if ( filter === null || filter === '' ) {
+      return anecdotes
+    }
+    const regex = new RegExp( filter, 'i' )
+    return anecdotes.filter(anecdote => anecdote.content.match(regex))
+  })
   const dispatch = useDispatch()
   const vote = (id) => {
     console.log('vote', id)
@@ -26,4 +32,4 @@ const AnecdoteForm = () => {
   )
 }
 
-export default AnecdoteForm
+export default AnecdoteList
