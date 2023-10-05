@@ -8,8 +8,12 @@ const Notification = () => {
   }
   const notification = useSelector(({notification}) => notification)
   return (
-    <div style={style}>
-      {notification}
+    <div>
+    {
+      (notification != null) && <div style={style}>
+        {notification}
+      </div>
+    }
     </div>
   )
 }
