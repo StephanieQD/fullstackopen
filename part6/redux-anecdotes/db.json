@@ -28,7 +28,7 @@
     {
       "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
       "id": "98312",
-      "votes": 2
+      "votes": 3
     },
     {
       "content": "Why do I want to?",
@@ -39,6 +39,21 @@
       "content": "More software projects have gone awry for lack of calendar time than for all other causes combined.",
       "id": "44193",
       "votes": 8
+    },
+    {
+      "content": "Testing after updating notifications",
+      "id": "80220",
+      "votes": 1
+    },
+    {
+      "content": "Everybody should learn to program a computer because it teaches you how to think.",
+      "id": "29969",
+      "votes": 1
+    },
+    {
+      "content": "When I wrote this code, only God and I understood what I did. Now only God knows.",
+      "id": "67629",
+      "votes": 3
     }
   ]
 }
