@@ -20,6 +20,17 @@ const App = () => {
         dispatch({type: 'HIDE'})
       }, 5000);
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+      dispatch({
+        type: 'SHOW',
+        payload: "Anecdote must be at least 5 characters."
+      })
+  
+      setTimeout(() => {
+        dispatch({type: 'HIDE'})
+      }, 5000);
+    }
   })
 
   const updateAnecdoteMutation = useMutation(updateAnecdote, {
