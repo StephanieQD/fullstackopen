@@ -27,7 +27,6 @@ const useCountry = (name) => {
       })
       .catch((error) => {
         // handle error
-        console.log("There was a goof!")
         console.log(error)
         setCountry({ found: false })
       })
@@ -36,9 +35,7 @@ const useCountry = (name) => {
   if ( name === '') {
     return null
   }
-  console.log("Come along with me")
-  console.log(country)
-  console.log("COUNTRY")
+
   return country
 }
 
