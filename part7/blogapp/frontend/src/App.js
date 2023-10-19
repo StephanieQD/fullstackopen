@@ -22,18 +22,17 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
-  const notifyWith = (message, type='info') => {
+  const notifyWith = (message, type = 'info') => {
     setInfo({
-      message, type
+      message,
+      type,
     })
 
     setTimeout(() => {
-      setInfo({ message: null } )
+      setInfo({ message: null })
     }, 3000)
   }
 
@@ -43,7 +42,7 @@ const App = () => {
       setUser(user)
       storageService.saveUser(user)
       notifyWith('welcome!')
-    } catch(e) {
+    } catch (e) {
       console.log('This is the error', e)
       notifyWith('wrong username or password', 'error')
     }
@@ -66,17 +65,18 @@ const App = () => {
     const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
     const updatedBlog = await blogService.update(blogToUpdate)
     notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`)
-    setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+    setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)))
   }
 
   const remove = async (blog) => {
-    const ok = window.confirm(`Sure you want to remove '${blog.title}' by ${blog.author}`)
+    const ok = window.confirm(
+      `Sure you want to remove '${blog.title}' by ${blog.author}`
+    )
     if (ok) {
       await blogService.remove(blog.id)
       notifyWith(`The blog' ${blog.title}' by '${blog.author} removed`)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      setBlogs(blogs.filter((b) => b.id !== blog.id))
     }
-
   }
 
   if (!user) {
@@ -99,19 +99,21 @@ const App = () => {
         {user.name} logged in
         <button onClick={logout}>logout</button>
       </div>
-      <Togglable buttonLabel='new note' ref={blogFormRef}>
+      <Togglable buttonLabel="new note" ref={blogFormRef}>
         <NewBlog createBlog={createBlog} />
       </Togglable>
       <div>
-        {blogs.sort(byLikes).map(blog =>
+        {blogs.sort(byLikes).map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
             like={() => like(blog)}
-            canRemove={user && blog.user && blog.user.username===user.username}
+            canRemove={
+              user && blog.user && blog.user.username === user.username
+            }
             remove={() => remove(blog)}
           />
-        )}
+        ))}
       </div>
     </div>
   )
