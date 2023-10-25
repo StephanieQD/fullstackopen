@@ -8,18 +8,15 @@ import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { useSelector, useDispatch } from 'react-redux'
-import { sendNotification } from './reducers/notificationReducer'
+import { useNotify } from './components/NotificationContext'
 
 const App = () => {
-  const dispatch = useDispatch()
-  const notificiation = useSelector((state) => state)
-
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState('')
-  // const [info, setInfo] = useState({ message: null })
 
   const blogFormRef = useRef()
+
+  const setNotif = useNotify()
 
   useEffect(() => {
     const user = storageService.loadUser()
@@ -28,14 +25,14 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
+    notifyWith('all blogs loaded')
   }, [])
 
   const notifyWith = (message, type = 'info') => {
-    dispatch(sendNotification(message, type))
-
-    setTimeout(() => {
-      dispatch({ type: 'CLEAR' })
-    }, 3000)
+    setNotif({
+      message,
+      type,
+    })
   }
 
   const login = async (username, password) => {
@@ -85,7 +82,7 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
-        <Notification info={notificiation} />
+        <Notification />
         <LoginForm login={login} />
       </div>
     )
@@ -96,7 +93,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification info={notificiation} />
+      <Notification />
       <div>
         {user.name} logged in
         <button onClick={logout}>logout</button>
