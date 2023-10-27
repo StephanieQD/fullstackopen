@@ -25,7 +25,36 @@ const App = () => {
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
       const blogs = queryClient.getQueryData(['blogs'])
+      notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
       queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
+    },
+  })
+
+  const addLikeMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: (updatedBlog) => {
+      notifyWith(
+        `Added like for the blog '${updatedBlog.title}' by '${updatedBlog.author}'`
+      )
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b))
+      )
+    },
+  })
+
+  const removeMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: (removedBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.filter((b) => b.id !== removedBlog.id)
+      )
+      notifyWith(
+        `The blog "${removedBlog.title}" by ${removedBlog.author} has been removed`
+      )
     },
   })
 
@@ -65,28 +94,22 @@ const App = () => {
     notifyWith('logged out')
   }
 
-  const createBlog = async (newBlog) => {
+  const createBlog = (newBlog) => {
     newBlogMutation.mutate(newBlog)
-    notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
     blogFormRef.current.toggleVisibility()
   }
 
-  const like = async (blog) => {
+  const like = (blog) => {
     const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
-    const updatedBlog = await blogService.update(blogToUpdate)
-    console.log(updatedBlog) // Get rid of "'updatedBlog' is assigned a value but never used" error
-    notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`)
-    // setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)))
+    addLikeMutation.mutate(blogToUpdate)
   }
 
-  const remove = async (blog) => {
+  const remove = (blog) => {
     const ok = window.confirm(
       `Sure you want to remove '${blog.title}' by ${blog.author}`
     )
     if (ok) {
-      await blogService.remove(blog.id)
-      notifyWith(`The blog' ${blog.title}' by '${blog.author} removed`)
-      // setBlogs(blogs.filter((b) => b.id !== blog.id))
+      removeMutation.mutate(blog)
     }
   }
 

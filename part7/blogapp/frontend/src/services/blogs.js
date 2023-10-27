@@ -3,7 +3,9 @@ import storageService from '../services/storage'
 const baseUrl = '/api/blogs'
 
 const headers = {
-  'Authorization': storageService.loadUser() ? `Bearer ${storageService.loadUser().token}` : null
+  Authorization: storageService.loadUser()
+    ? `Bearer ${storageService.loadUser().token}`
+    : null,
 }
 
 const getAll = async () => {
@@ -17,12 +19,15 @@ const create = async (object) => {
 }
 
 const update = async (object) => {
-  const request = await axios.put(`${baseUrl}/${object.id}`, object, { headers })
+  const request = await axios.put(`${baseUrl}/${object.id}`, object, {
+    headers,
+  })
   return request.data
 }
 
-const remove = async (id) => {
-  await axios.delete(`${baseUrl}/${id}`, { headers })
+const remove = async (blog) => {
+  await axios.delete(`${baseUrl}/${blog.id}`, { headers })
+  return blog
 }
 
 export default { getAll, create, update, remove }
