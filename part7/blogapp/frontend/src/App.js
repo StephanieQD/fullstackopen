@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -9,10 +9,14 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useNotify } from './components/NotificationContext'
+import { useUserValue, useUserDispatch } from './components/UserContext'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 const App = () => {
+  const user = useUserValue()
+  const setUser = useUserDispatch()
+
   const queryClient = useQueryClient()
   const result = useQuery({
     queryKey: ['blogs'],
@@ -58,15 +62,13 @@ const App = () => {
     },
   })
 
-  const [user, setUser] = useState('')
-
   const blogFormRef = useRef()
 
   const setNotif = useNotify()
 
   useEffect(() => {
-    const user = storageService.loadUser()
-    setUser(user)
+    const loggedUser = storageService.loadUser()
+    setUser({ type: 'SET_USER', payload: loggedUser })
   }, [])
 
   const notifyWith = (message, type = 'info') => {
@@ -78,8 +80,8 @@ const App = () => {
 
   const login = async (username, password) => {
     try {
-      const user = await loginService.login({ username, password })
-      setUser(user)
+      const loggedUser = await loginService.login({ username, password })
+      setUser({ type: 'SET_USER', payload: loggedUser })
       storageService.saveUser(user)
       notifyWith('welcome!')
     } catch (e) {
@@ -89,7 +91,7 @@ const App = () => {
   }
 
   const logout = async () => {
-    setUser(null)
+    setUser({ type: 'CLEAR' })
     storageService.removeUser()
     notifyWith('logged out')
   }
