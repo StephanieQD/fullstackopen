@@ -13,5 +13,7 @@ const removeUser = () => {
 }
 
 export default {
-  saveUser, loadUser, removeUser
+  saveUser,
+  loadUser,
+  removeUser,
 }
