@@ -6,6 +6,7 @@ import LoginForm from './components/Login'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
+import User from './components/User'
 import { useNotify } from './components/NotificationContext'
 import { useUserValue, useUserDispatch } from './components/UserContext'
 
@@ -14,7 +15,6 @@ import { Routes, Route, Link } from 'react-router-dom'
 const App = () => {
   const user = useUserValue()
   const setUser = useUserDispatch()
-
   const setNotif = useNotify()
 
   useEffect(() => {
@@ -75,6 +75,7 @@ const App = () => {
         <button onClick={logout}>logout</button>
       </div>
       <Routes>
+        <Route path="/users/:id" element={<User />} />
         <Route path="/" element={<BlogList />} />
         <Route path="/users" element={<UserList />} />
       </Routes>
