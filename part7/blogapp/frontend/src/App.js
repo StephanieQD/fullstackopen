@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
+import Blog from './components/Blog'
 import { useNotify } from './components/NotificationContext'
 import { useUserValue, useUserDispatch } from './components/UserContext'
 
@@ -75,6 +76,7 @@ const App = () => {
         <button onClick={logout}>logout</button>
       </div>
       <Routes>
+        <Route path="/blogs/:id" element={<Blog />} />
         <Route path="/users/:id" element={<User />} />
         <Route path="/" element={<BlogList />} />
         <Route path="/users" element={<UserList />} />
