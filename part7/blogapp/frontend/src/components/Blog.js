@@ -102,6 +102,12 @@ const Blog = () => {
       </div>
       <div>{blog.user && 'Added by ' + blog.user.name}</div>
       {canRemove && <button onClick={() => remove(blog)}>delete</button>}
+      {blog.comments.length > 0 && <h3>Comments</h3>}
+      <ul>
+        {blog.comments.map((comment, i) => (
+          <li key={`comment-${i}`}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }
