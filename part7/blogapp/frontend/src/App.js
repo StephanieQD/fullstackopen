@@ -8,10 +8,11 @@ import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
 import Blog from './components/Blog'
+import Navigation from './components/Navigation'
 import { useNotify } from './components/NotificationContext'
 import { useUserValue, useUserDispatch } from './components/UserContext'
 
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 const App = () => {
   const user = useUserValue()
@@ -62,19 +63,10 @@ const App = () => {
   return (
     <div>
       <div>
-        <Link style={{ padding: 5 }} to="/">
-          home
-        </Link>
-        <Link style={{ padding: 5 }} to="/users">
-          users
-        </Link>
+        <Navigation logout={logout} />
       </div>
       <h2>blogs</h2>
       <Notification />
-      <div>
-        {user.name} logged in <br />
-        <button onClick={logout}>logout</button>
-      </div>
       <Routes>
         <Route path="/blogs/:id" element={<Blog />} />
         <Route path="/users/:id" element={<User />} />
