@@ -11,9 +11,15 @@ const Blog = () => {
   const queryClient = useQueryClient()
 
   const match = useMatch('/blogs/:id')
-  const blogsQuery = useQuery({
-    queryKey: ['blogs'],
-    queryFn: blogService.getAll,
+
+  const fetchByMatch = async () => {
+    const foundBlog = await blogService.getBlogById(match.params.id)
+    return foundBlog
+  }
+
+  const singleBlogQuery = useQuery({
+    queryKey: ['blog'],
+    queryFn: fetchByMatch,
     refetchOnWindowFocus: false,
     retry: 1,
   })
@@ -26,14 +32,21 @@ const Blog = () => {
     })
   }
 
+  const addCommentMutation = useMutation({
+    mutationFn: blogService.addComment,
+    onSuccess: (updatedBlog) => {
+      queryClient.setQueryData(['blog'], updatedBlog)
+      notifyWith('Your comment was added')
+    },
+    onError: (error) => {
+      console.log('ERROR', error)
+      notifyWith('Something went wrong, unable to add comment...')
+    },
+  })
+
   const removeMutation = useMutation({
     mutationFn: blogService.remove,
     onSuccess: (removedBlog) => {
-      const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(
-        ['blogs'],
-        blogs.filter((b) => b.id !== removedBlog.id)
-      )
       notifyWith(
         `The blog "${removedBlog.title}" by ${removedBlog.author} has been removed`
       )
@@ -49,26 +62,21 @@ const Blog = () => {
     mutationFn: blogService.update,
     onSuccess: (updatedBlog) => {
       notifyWith(
-        `Added like for the blog '${updatedBlog.title}' by '${updatedBlog.author}'`
+        `Added like for the blog '${updatedBlog.title}' by ${updatedBlog.author}`
       )
-      const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(
-        ['blogs'],
-        blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b))
-      )
+      queryClient.setQueryData(['blog'], updatedBlog)
     },
   })
 
-  if (blogsQuery.isLoading) {
+  if (singleBlogQuery.isLoading) {
     return <div>Loading blog info...</div>
   }
 
-  if (blogsQuery.isError) {
+  if (singleBlogQuery.isError) {
     return <div>Something went wrong, please try again later...</div>
   }
-  const blogs = blogsQuery.data
 
-  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
+  const blog = singleBlogQuery.data
 
   const addLike = (blog) => {
     const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
@@ -76,7 +84,6 @@ const Blog = () => {
   }
 
   const remove = (blog) => {
-    console.log('deleting...')
     const ok = window.confirm(
       `Sure you want to remove '${blog.title}' by ${blog.author}`
     )
@@ -87,6 +94,13 @@ const Blog = () => {
 
   if (!blog) {
     return null
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+    const comment = event.target.comment.value
+    event.target.comment.value = ''
+    addCommentMutation.mutate({ id: blog.id, comment })
   }
 
   const canRemove = user && blog.user && blog.user.username === user.username
@@ -102,7 +116,14 @@ const Blog = () => {
       </div>
       <div>{blog.user && 'Added by ' + blog.user.name}</div>
       {canRemove && <button onClick={() => remove(blog)}>delete</button>}
-      {blog.comments.length > 0 && <h3>Comments</h3>}
+      <h3>Comments</h3>
+      {blog.comments.length === 0 && (
+        <i>No comments yet, be the first to share your thoughts!</i>
+      )}
+      <form onSubmit={addComment}>
+        <input name="comment" />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
         {blog.comments.map((comment, i) => (
           <li key={`comment-${i}`}>{comment}</li>

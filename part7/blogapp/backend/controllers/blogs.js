@@ -13,7 +13,27 @@ router.get('/', async (request, response) => {
 })
 
 /*--------------------------------------------------
- # Post a blogs
+ # Get single blog
+ --------------------------------------------------*/
+router.get('/:id', async (request, response) => {
+  const { id } = request.params
+  try {
+    const blog = await Blog.findById(id).populate('user', {
+      username: 1,
+      name: 1,
+    })
+    if (!blog) {
+      return response.status(404).json({ error: 'Cannot find blog' })
+    }
+
+    response.status(201).json(blog)
+  } catch (error) {
+    response.status(500).json({ error: 'Unable to find blog' })
+  }
+})
+
+/*--------------------------------------------------
+ # Post a blog
  --------------------------------------------------*/
 router.post('/', userExtractor, async (request, response) => {
   const { title, author, url, likes } = request.body
@@ -93,7 +113,8 @@ router.post('/:id/comments', async (request, response) => {
     }
 
     blog.comments = [...blog.comments, comment]
-    const updatedBlog = await blog.save()
+    let updatedBlog = await blog.save()
+    updatedBlog = await Blog.findById(updatedBlog._id).populate('user')
 
     response.status(201).json(updatedBlog)
   } catch (error) {

@@ -13,6 +13,17 @@ const getAll = async () => {
   return request.data
 }
 
+const getBlogById = async (id) => {
+  const request = await axios.get(`${baseUrl}/${id}`)
+  return request.data
+}
+
+const addComment = async ({ id, comment }) => {
+  console.log('adding comment', comment, id)
+  const request = await axios.post(`${baseUrl}/${id}/comments`, { comment })
+  return request.data
+}
+
 const create = async (object) => {
   const request = await axios.post(baseUrl, object, { headers })
   return request.data
@@ -30,4 +41,4 @@ const remove = async (blog) => {
   return blog
 }
 
-export default { getAll, create, update, remove }
+export default { getAll, create, update, remove, getBlogById, addComment }
