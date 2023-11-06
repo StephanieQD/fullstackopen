@@ -1,3 +1,4 @@
+// UNUSED -  Consider deleting
 import { useState } from 'react'
 
 const LoginForm = ({ onLogin }) => {
@@ -19,7 +20,7 @@ const LoginForm = ({ onLogin }) => {
           <input
             value={username}
             onChange={({ target }) => setUsername(target.value)}
-            id='username'
+            id="username"
           />
         </div>
         <div>

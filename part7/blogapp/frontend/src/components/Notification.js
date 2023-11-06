@@ -1,4 +1,5 @@
 import { useNotificationValue } from './NotificationContext'
+import Alert from '@mui/material/Alert'
 
 const Notification = () => {
   const notifValues = useNotificationValue()
@@ -6,17 +7,11 @@ const Notification = () => {
     return
   }
 
-  const style = {
-    color: notifValues.type === 'error' ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  }
-
-  return <div style={style}>{notifValues.message}</div>
+  return (
+    <Alert sx={{ margin: 1 }} severity={notifValues.type}>
+      {notifValues.message}
+    </Alert>
+  )
 }
 
 export default Notification

@@ -4,6 +4,18 @@ import { useMatch } from 'react-router-dom'
 import { useNotify } from './NotificationContext'
 import { useUserValue } from './UserContext'
 import { useNavigate } from 'react-router-dom'
+import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material-next/Button'
+import ChatIcon from '@mui/icons-material/Chat'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import Avatar from '@mui/material/Avatar'
+import Divider from '@mui/material/Divider'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const Blog = () => {
   const navigate = useNavigate()
@@ -107,28 +119,73 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>
+      <Typography variant="h5">
         &quot;{blog.title}&quot; by {blog.author}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom>
+        <a href={blog.url}>{blog.url}</a>
+      </Typography>
       <div>
-        {blog.likes} likes <button onClick={() => addLike(blog)}>like</button>
+        <Typography variant="subtitle1" gutterBottom>
+          {blog.likes} likes{' '}
+          <Button
+            sx={{ margin: 1 }}
+            variant="filledTonal"
+            onClick={() => addLike(blog)}
+          >
+            <ThumbUpIcon />
+          </Button>
+        </Typography>
       </div>
-      <div>{blog.user && 'Added by ' + blog.user.name}</div>
-      {canRemove && <button onClick={() => remove(blog)}>delete</button>}
-      <h3>Comments</h3>
+      <Typography variant="body2" gutterBottom>
+        {blog.user && 'Added by ' + blog.user.name}
+      </Typography>
+      {canRemove && (
+        <Button
+          sx={{ margin: 1 }}
+          color="tertiary"
+          variant="filled"
+          onClick={() => remove(blog)}
+        >
+          <DeleteIcon sx={{ marginRight: 1 }} />
+          delete this blog
+        </Button>
+      )}
+      <Typography variant="h6" gutterBottom>
+        Comments ({blog.comments.length})
+      </Typography>
       {blog.comments.length === 0 && (
-        <i>No comments yet, be the first to share your thoughts!</i>
+        <Typography variant="caption" gutterBottom>
+          No comments yet, be the first to share your thoughts!
+        </Typography>
       )}
       <form onSubmit={addComment}>
-        <input name="comment" />
-        <button type="submit">add comment</button>
+        <TextField label="comment" name="comment" />
+        <br />
+        <Button sx={{ margin: 1 }} variant="filledTonal" type="submit">
+          <ChatIcon sx={{ marginRight: 1 }} />
+          add comment
+        </Button>
       </form>
-      <ul>
-        {blog.comments.map((comment, i) => (
-          <li key={`comment-${i}`}>{comment}</li>
-        ))}
-      </ul>
+      <List>
+        {blog.comments.map(
+          (comment, i) =>
+            comment !== null &&
+            comment.length > 0 && (
+              <>
+                <ListItem key={`comment-${i}`}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <ChatIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={`"${comment}"`} />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </>
+            )
+        )}
+      </List>
     </div>
   )
 }

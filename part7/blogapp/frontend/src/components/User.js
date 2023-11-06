@@ -1,6 +1,15 @@
 import usersService from '../services/users'
 import { useQuery } from '@tanstack/react-query'
 import { useMatch } from 'react-router-dom'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import Avatar from '@mui/material/Avatar'
+import BookIcon from '@mui/icons-material/Book'
+import ListItemButton from '@mui/material/ListItemButton'
+import { Link } from 'react-router-dom'
+import Typography from '@mui/material/Typography'
 
 const User = () => {
   const match = useMatch('/users/:id')
@@ -28,17 +37,24 @@ const User = () => {
 
   return (
     <div>
-      <h2>
+      <Typography variant="h4">
         {user.name} ({user.username})
-      </h2>
-      <p>
-        <b>Added Blogs</b>
-      </p>
-      <ul>
+      </Typography>
+      <Typography variant="h5">Added Blogs</Typography>
+      <List>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <ListItem key={blog.id}>
+            <ListItemButton component={Link} to={`/blogs/${blog.id}`}>
+              <ListItemAvatar>
+                <Avatar>
+                  <BookIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={`"${blog.title}"`} />
+            </ListItemButton>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }

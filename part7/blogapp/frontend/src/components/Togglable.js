@@ -1,4 +1,6 @@
 import { useState, useImperativeHandle, forwardRef } from 'react'
+import Button from '@mui/material-next/Button'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 
 const Togglable = forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
@@ -12,18 +14,26 @@ const Togglable = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => {
     return {
-      toggleVisibility
+      toggleVisibility,
     }
   })
 
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button
+          variant="filledTonal"
+          sx={{ marginBottom: 1 }}
+          onClick={toggleVisibility}
+        >
+          <EditNoteIcon /> {props.buttonLabel}
+        </Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button color="tertiary" variant="filled" onClick={toggleVisibility}>
+          cancel
+        </Button>
       </div>
     </div>
   )

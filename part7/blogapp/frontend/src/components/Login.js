@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material-next/Button'
+import Box from '@mui/material/Box'
+import LoginIcon from '@mui/icons-material/Login'
 
 const LoginForm = ({ login }) => {
   const [username, setUsername] = useState('')
@@ -10,28 +14,30 @@ const LoginForm = ({ login }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit}>
       <div>
-        username
-        <input
-          id='username'
+        <TextField
+          sx={{ margin: 1 }}
+          id="username"
+          label="username"
           value={username}
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
-        password
-        <input
-          id='password'
+        <TextField
+          sx={{ margin: 1 }}
+          id="password"
           type="password"
+          label="password"
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button id='login-button' type="submit">
-        login
-      </button>
-    </form>
+      <Button variant="filledTonal" id="login-button" type="submit">
+        login <LoginIcon sx={{ marginLeft: 1 }} />
+      </Button>
+    </Box>
   )
 }
 

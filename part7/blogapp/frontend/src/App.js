@@ -11,6 +11,9 @@ import Blog from './components/Blog'
 import Navigation from './components/Navigation'
 import { useNotify } from './components/NotificationContext'
 import { useUserValue, useUserDispatch } from './components/UserContext'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import './main.css'
 
 import { Routes, Route } from 'react-router-dom'
 
@@ -37,7 +40,7 @@ const App = () => {
       setUser({ type: 'SET', payload: loggedUser })
       console.log('user', user)
       storageService.saveUser(loggedUser)
-      notifyWith('welcome!')
+      notifyWith('Login successful, welcome back!', 'success')
     } catch (e) {
       console.log('This is the error', e)
       notifyWith('wrong username or password', 'error')
@@ -52,27 +55,28 @@ const App = () => {
 
   if (!user) {
     return (
-      <div>
-        <h2>log in to application</h2>
+      <Container>
+        <Typography sx={{ marginBottom: 1 }} variant="h5">
+          log in to application
+        </Typography>
         <Notification />
         <LoginForm login={login} />
-      </div>
+      </Container>
     )
   }
 
   return (
     <div>
-      <div>
-        <Navigation logout={logout} />
-      </div>
-      <h2>blogs</h2>
-      <Notification />
-      <Routes>
-        <Route path="/blogs/:id" element={<Blog />} />
-        <Route path="/users/:id" element={<User />} />
-        <Route path="/" element={<BlogList />} />
-        <Route path="/users" element={<UserList />} />
-      </Routes>
+      <Navigation logout={logout} />
+      <Container>
+        <Notification />
+        <Routes>
+          <Route path="/blogs/:id" element={<Blog />} />
+          <Route path="/users/:id" element={<User />} />
+          <Route path="/" element={<BlogList />} />
+          <Route path="/users" element={<UserList />} />
+        </Routes>
+      </Container>
     </div>
   )
 }
