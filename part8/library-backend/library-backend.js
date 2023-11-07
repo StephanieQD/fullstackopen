@@ -118,6 +118,10 @@ const typeDefs = `
       author: String!
       genres: [String!]!
     ) : Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ) : Author
   }
 `;
 
@@ -146,10 +150,10 @@ const resolvers = {
       const book = { ...args, id: uuid() };
       books = books.concat(book);
       // See if author exists
-      const searchAuthor = authors.filter(
+      const searchAuthor = authors.find(
         (author) => author.name === book.author
       );
-      if (searchAuthor.length === 0) {
+      if (!searchAuthor) {
         const author = {
           name: book.author,
           id: uuid(),
@@ -157,6 +161,15 @@ const resolvers = {
         authors = authors.concat(author);
       }
       return book;
+    },
+    editAuthor: (root, args) => {
+      const searchAuthor = authors.find((author) => author.name === args.name);
+      if (!searchAuthor) {
+        return null;
+      }
+      const updatedAuthor = { ...searchAuthor, born: args.setBornTo };
+      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a));
+      return updatedAuthor;
     },
   },
   Author: {
