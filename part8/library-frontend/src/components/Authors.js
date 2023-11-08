@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { ALL_AUTHORS, UPDATE_AUTHOR } from "../queries";
 
 const Authors = () => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState("Robert Martin");
   const [born, setBorn] = useState("");
   const result = useQuery(ALL_AUTHORS);
 
@@ -15,7 +15,6 @@ const Authors = () => {
     return <div>loading...</div>;
   }
 
-  console.log(result);
   const authors = result.data.allAuthors;
 
   const handleSubmit = async (event) => {
@@ -49,13 +48,13 @@ const Authors = () => {
       </table>
       <h3>Set birthyear</h3>
       <form onSubmit={handleSubmit}>
-        <div>
-          name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
+        <select value={name} onChange={({ target }) => setName(target.value)}>
+          {authors.map((a) => (
+            <option key={a.id} value={a.name}>
+              {a.name}
+            </option>
+          ))}
+        </select>
         <div>
           born
           <input
