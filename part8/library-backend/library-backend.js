@@ -149,12 +149,40 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => {
+      if (useMongo) {
+        return Book.collection.countDocuments();
+      } else {
+        return books.length;
+      }
+    },
+    authorCount: () => {
+      if (useMongo) {
+        return Author.collection.countDocuments();
+      } else {
+        return authors.length;
+      }
+    },
     allBooks: async (root, args) => {
       if (useMongo) {
         console.log("Attempting to get books...");
-        return await Book.find({});
+        let query = {};
+        if (args.genre) {
+          console.log("Attempting to fetch by genre...", args.genre);
+          query.genres = args.genre;
+        }
+
+        if (args.author) {
+          console.log("Attempting to fetch by author...", args.author);
+          const author = await Author.findOne({ name: args.author });
+          console.log("Author is ", author);
+          if (!author) {
+            return [];
+          }
+          query.author = author._id;
+        }
+
+        return await Book.find(query);
       } else {
         let filteredBooks = books;
         if (args.author) {
@@ -212,20 +240,53 @@ const resolvers = {
         return book;
       }
     },
-    editAuthor: (root, args) => {
-      const searchAuthor = authors.find((author) => author.name === args.name);
-      if (!searchAuthor) {
-        return null;
+    editAuthor: async (root, args) => {
+      if (useMongo) {
+        const query = { name: args.name };
+        const author = await Author.findOne(query);
+        console.log("updating author", args);
+        if (!author) {
+          return null;
+        }
+
+        try {
+          await Author.updateOne(query, {
+            $set: {
+              born: args.setBornTo,
+            },
+          });
+          return await Author.findOne(query);
+        } catch (e) {
+          console.log("something went wrong", e);
+        }
+      } else {
+        const searchAuthor = authors.find(
+          (author) => author.name === args.name
+        );
+        if (!searchAuthor) {
+          return null;
+        }
+        const updatedAuthor = { ...searchAuthor, born: args.setBornTo };
+        authors = authors.map((a) =>
+          a.name === args.name ? updatedAuthor : a
+        );
+        return updatedAuthor;
       }
-      const updatedAuthor = { ...searchAuthor, born: args.setBornTo };
-      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a));
-      return updatedAuthor;
     },
   },
   Author: {
-    bookCount: (root) => {
-      const foundBooks = books.filter((book) => book.author === root.name);
-      return foundBooks.length;
+    bookCount: async (root) => {
+      if (useMongo) {
+        console.log("finding book count", root);
+        const foundBooks = await Book.find({
+          author: root._id,
+        });
+        console.log("and these are the books", foundBooks);
+        return foundBooks.length;
+      } else {
+        const foundBooks = books.filter((book) => book.author === root.name);
+        return foundBooks.length;
+      }
     },
   },
 };
