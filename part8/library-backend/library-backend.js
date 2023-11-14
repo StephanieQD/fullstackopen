@@ -1,3 +1,4 @@
+const { GraphQLError } = require("graphql");
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
@@ -213,7 +214,18 @@ const resolvers = {
         let author = await Author.findOne({ name: args.author });
         if (!author) {
           author = new Author({ name: args.author, born: null });
-          await author.save();
+
+          try {
+            await author.save();
+          } catch (error) {
+            throw new GraphQLError("Saving author failed", {
+              extensions: {
+                code: "BAD_USER_INPUT",
+                invalidArgs: args.author,
+                error,
+              },
+            });
+          }
         }
         const book = new Book({
           author,
@@ -221,7 +233,18 @@ const resolvers = {
           published: args.published,
           genres: args.genres,
         });
-        await book.save();
+        try {
+          await book.save();
+        } catch (error) {
+          throw new GraphQLError("Saving book failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.title,
+              error,
+            },
+          });
+        }
+
         return book;
       } else {
         const book = { ...args, id: uuid() };
