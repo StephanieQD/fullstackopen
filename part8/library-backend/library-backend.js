@@ -203,7 +203,7 @@ const resolvers = {
           query.author = author._id;
         }
 
-        return await Book.find(query);
+        return await Book.find(query).populate("author");
       } else {
         let filteredBooks = books;
         if (args.author) {

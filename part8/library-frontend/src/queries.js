@@ -4,8 +4,18 @@ export const ALL_BOOKS = gql`
   query AllBooks {
     allBooks {
       title
-      author
+      author {
+        name
+      }
       published
+    }
+  }
+`;
+
+export const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
     }
   }
 `;
