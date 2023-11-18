@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries";
 import { useState } from "react";
+import BookTable from "./BookTable";
 
 const Books = () => {
   const [genreFilter, setGenreFilter] = useState(null);
@@ -10,6 +11,10 @@ const Books = () => {
   }
   const books = result.data.allBooks;
   let genres = [];
+
+  const filteredBooks = books.filter((book) =>
+    genreFilter ? book.genres.includes(genreFilter) : book
+  );
 
   // Get a list of all genres for filter buttons
   for (let index = 0; index < books.length; index++) {
@@ -26,28 +31,7 @@ const Books = () => {
           in genre <b>{genreFilter}</b>
         </p>
       )}
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books
-            .filter((book) =>
-              genreFilter ? book.genres.includes(genreFilter) : book
-            )
-            .map((book) => {
-              return (
-                <tr key={book.title}>
-                  <td>{book.title}</td>
-                  <td>{book.author.name}</td>
-                  <td>{book.published}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+      <BookTable books={filteredBooks} />
       {genres.map((g) => (
         <button key={`genre-${g}`} onClick={() => setGenreFilter(g)}>
           {g}

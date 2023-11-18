@@ -21,6 +21,15 @@ export const LOGIN = gql`
   }
 `;
 
+export const ME = gql`
+  query {
+    me {
+      favoriteGenre
+      username
+    }
+  }
+`;
+
 export const ALL_AUTHORS = gql`
   query AllAuthors {
     allAuthors {

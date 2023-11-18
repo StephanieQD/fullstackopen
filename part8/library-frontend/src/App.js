@@ -2,13 +2,14 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
+import Recommendations from "./components/Recommendations";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useApolloClient } from "@apollo/client";
 
 const App = () => {
   const [token, setToken] = useState(null);
-  const [message, setMessage] = useState("example message");
+  const [message, setMessage] = useState(null);
   const client = useApolloClient();
   const [messageType, setMessageType] = useState("info");
 
@@ -65,9 +66,14 @@ const App = () => {
             books
           </Link>
           {token && (
-            <Link style={{ margin: 5 }} to="/addbook">
-              add book
-            </Link>
+            <>
+              <Link style={{ margin: 5 }} to="/addbook">
+                add book
+              </Link>
+              <Link style={{ margin: 5 }} to="/recommendations">
+                recommendations
+              </Link>
+            </>
           )}
           {!token && (
             <Link style={{ margin: 5 }} to="/login">
@@ -85,6 +91,7 @@ const App = () => {
             path="/login"
             element={<LoginForm setToken={setToken} notify={notify} />}
           />
+          <Route path="/recommendations" element={<Recommendations />} />
         </Routes>
       </div>
     </Router>
