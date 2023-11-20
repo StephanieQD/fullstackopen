@@ -1,27 +1,43 @@
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries";
-import { useState } from "react";
+import { ALL_BOOKS, BOOKS_BY_GENRE } from "../queries";
+import { useState, useEffect } from "react";
 import BookTable from "./BookTable";
 
 const Books = () => {
   const [genreFilter, setGenreFilter] = useState(null);
-  const result = useQuery(ALL_BOOKS);
-  if (result.loading) {
+  const [books, setBooks] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const allBooksQuery = useQuery(ALL_BOOKS);
+  const queryByGenre = useQuery(BOOKS_BY_GENRE);
+
+  useEffect(() => {
+    if (allBooksQuery.data && !allBooksQuery.loading && !genreFilter) {
+      setBooks(allBooksQuery.data.allBooks);
+      // Get a list of all genres for filter buttons
+      let tempGenres = [];
+      for (let index = 0; index < books.length; index++) {
+        const book = books[index];
+        tempGenres.push(...book.genres);
+      }
+
+      setGenres([...new Set(tempGenres)]); // Only unique values
+    }
+  }, [allBooksQuery.data, books, allBooksQuery.loading, genreFilter]);
+
+  if (allBooksQuery.loading) {
     return <div>loading...</div>;
   }
-  const books = result.data.allBooks;
-  let genres = [];
 
-  const filteredBooks = books.filter((book) =>
-    genreFilter ? book.genres.includes(genreFilter) : book
-  );
+  const fetchByGenre = async (newGenre) => {
+    if (!newGenre) {
+      await allBooksQuery.refetch();
+      return setBooks(allBooksQuery.data.allBooks);
+    }
 
-  // Get a list of all genres for filter buttons
-  for (let index = 0; index < books.length; index++) {
-    const book = books[index];
-    genres.push(...book.genres);
-  }
-  genres = [...new Set(genres)]; // Only unique values
+    setGenreFilter(newGenre);
+    const filteredBooks = await queryByGenre.refetch({ genre: newGenre });
+    setBooks(filteredBooks.data.allBooks);
+  };
 
   return (
     <div>
@@ -31,13 +47,13 @@ const Books = () => {
           in genre <b>{genreFilter}</b>
         </p>
       )}
-      <BookTable books={filteredBooks} />
+      <BookTable books={books} />
       {genres.map((g) => (
-        <button key={`genre-${g}`} onClick={() => setGenreFilter(g)}>
+        <button key={`genre-${g}`} onClick={() => fetchByGenre(g)}>
           {g}
         </button>
       ))}
-      <button onClick={() => setGenreFilter(null)}>all genres</button>
+      <button onClick={() => fetchByGenre(null)}>all genres</button>
     </div>
   );
 };

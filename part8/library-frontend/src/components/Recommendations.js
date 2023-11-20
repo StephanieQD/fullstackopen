@@ -1,30 +1,42 @@
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { ME, ALL_BOOKS } from "../queries";
+import { ME, BOOKS_BY_GENRE } from "../queries";
 import BookTable from "./BookTable";
 
 const Recommendations = () => {
+  const [faveGenre, setFaveGenre] = useState(null);
+  const [books, setBooks] = useState([]);
   const userResult = useQuery(ME);
-  const bookResult = useQuery(ALL_BOOKS);
+  const bookResult = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: faveGenre },
+    skip: !faveGenre,
+  });
+
+  useEffect(() => {
+    if (userResult.data) {
+      const currentUser = userResult.data.me;
+      setFaveGenre(currentUser.favoriteGenre);
+      console.log(currentUser);
+    }
+  }, [userResult]);
+
+  useEffect(() => {
+    if (bookResult.data) {
+      setBooks(bookResult.data.allBooks);
+    }
+  }, [bookResult]);
 
   if (userResult.loading || bookResult.loading) {
     return <div>loading...</div>;
   }
 
-  const currentUser = userResult.data.me;
-  const books = bookResult.data.allBooks;
-  const filteredBooks = books.filter((book) =>
-    book.genres.includes(currentUser.favoriteGenre)
-  );
-
-  console.log(currentUser);
-
   return (
     <div>
       <h2>Recommendations</h2>
       <p>
-        Books in your favorite genre <b>{currentUser.favoriteGenre}</b>
+        Books in your favorite genre <b>{faveGenre}</b>
       </p>
-      <BookTable books={filteredBooks} />
+      <BookTable books={books} />
     </div>
   );
 };
