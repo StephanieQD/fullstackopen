@@ -5,13 +5,20 @@ import LoginForm from "./components/LoginForm";
 import Recommendations from "./components/Recommendations";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useSubscription } from "@apollo/client";
+import { BOOK_ADDED } from "./queries";
 
 const App = () => {
   const [token, setToken] = useState(null);
   const [message, setMessage] = useState(null);
   const client = useApolloClient();
   const [messageType, setMessageType] = useState("info");
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      window.alert(`New book added! ${data.data.bookAdded.title}`);
+    },
+  });
 
   useEffect(() => {
     console.log("evaluating token...");
