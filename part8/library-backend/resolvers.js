@@ -200,7 +200,7 @@ const resolvers = {
           });
         }
         if (!author) {
-          author = new Author({ name: args.author, born: null });
+          author = new Author({ name: args.author, born: null, bookCount: 1 });
 
           try {
             await author.save();
@@ -213,6 +213,9 @@ const resolvers = {
               },
             });
           }
+        } else {
+          author.bookCount += 1;
+          await author.save();
         }
         const book = new Book({
           author,
@@ -268,11 +271,22 @@ const resolvers = {
           return null;
         }
 
+        let updatedProps = {
+          born: args.setBornTo,
+        };
+
+        // TEMP - Fix book count for previously added authors (pre save implementation)
+        if (author.bookCount === 0) {
+          const foundBooks = await Book.find({
+            author: author._id,
+          });
+
+          updatedProps.bookCount = foundBooks.length;
+        }
+
         try {
           await Author.updateOne(query, {
-            $set: {
-              born: args.setBornTo,
-            },
+            $set: updatedProps,
           });
           return await Author.findOne(query);
         } catch (e) {
@@ -290,21 +304,6 @@ const resolvers = {
           a.name === args.name ? updatedAuthor : a
         );
         return updatedAuthor;
-      }
-    },
-  },
-  Author: {
-    bookCount: async (root) => {
-      if (useMongo) {
-        console.log("finding book count", root);
-        const foundBooks = await Book.find({
-          author: root._id,
-        });
-        console.log("and these are the books", foundBooks);
-        return foundBooks.length;
-      } else {
-        const foundBooks = books.filter((book) => book.author === root.name);
-        return foundBooks.length;
       }
     },
   },
